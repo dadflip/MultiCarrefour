@@ -4,11 +4,10 @@ project(Project C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(Project main.c
-        vehicule.c
-        vehicule.c
-        vehicule.c
         carrefour.h
         carrefour.h
         carrefour.c
         carrefour.h
-        serveur_controleur.c)
+        serveur_controleur.c
+        request.h
+        request.c)

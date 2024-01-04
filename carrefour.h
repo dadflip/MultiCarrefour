@@ -1,37 +1,48 @@
+// carrefour.h
 #ifndef CARREFOUR_H
 #define CARREFOUR_H
 
 #include <pthread.h>
-#include <semaphore.h>
+#include "request.h"
 
-// Inclure le fichier d'en-tête des véhicules
-#include "vehicule.h"
-#include "serveur_controleur.h"
-
-#define NOMBRE_VOIES 6
+#define NOMBRE_VOIES 3
 #define NOMBRE_CARREFOURS 4
 
-// Structure pour représenter une voie
+#define REQUEST_TYPE 1
+#define RESPONSE_TYPE 2
+
+// Structure représentant un véhicule
 typedef struct {
     int id;
-    pthread_mutex_t mutex;  // Mutex pour synchroniser l'accès à la file
+    int type;
+    int vitesse;
+    int destination;
+    struct Vehicule* suivant;
+} Vehicule;
+
+// Structure représentant une voie d'un carrefour
+typedef struct {
+    int id;
+    pthread_mutex_t mutex;
     Vehicule* debut;
     Vehicule* fin;
 } Voie;
 
-// Structure pour représenter un carrefour
+// Structure représentant un carrefour
 typedef struct {
     int id;
+    unsigned int seed;
+    int msgQueueID;
     Voie voies[NOMBRE_VOIES];
-    ServeurControleur* serveur;
-    // Ajoutez d'autres informations spécifiques au carrefour ici
 } Carrefour;
 
-// Prototypes des fonctions liées au comportement du carrefour
-void initialiserCarrefour(Carrefour* carrefour, int id, ServeurControleur* serveur);
-void* comportementCarrefour(void* arg);
+// Prototypes des fonctions
+void initialiserVoie(Voie* voie, int id);
+void initialiserCarrefour(Carrefour* carrefour, int id, int msgQueueID);
 void ajouterVehicule(Carrefour* carrefour, Vehicule* vehicule, int voie);
 Vehicule* retirerVehicule(Carrefour* carrefour, int voie);
-void demanderItineraireAuServeur(ServeurControleur* serveur, Vehicule* vehicule);
+void envoyerRequest(Carrefour* carrefour, Vehicule* vehicule);
+void recevoirResponse(Carrefour* carrefour);
+void* comportementCarrefour(void* arg);
 
 #endif  // CARREFOUR_H
