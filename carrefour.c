@@ -1,9 +1,9 @@
 #include "carrefour.h"
 #include "vehicule.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include "serveur_controleur.h"
 
 // Fonction pour initialiser une voie
 void initialiserVoie(Voie* voie, int id) {
@@ -14,7 +14,14 @@ void initialiserVoie(Voie* voie, int id) {
 }
 
 // Fonction pour initialiser le carrefour
+void initialiserCarrefour(Carrefour* carrefour, int id, ServeurControleur* serveur) {
+    carrefour->id = id;
 
+    // Initialiser les voies du carrefour
+    for (int i = 0; i < NOMBRE_VOIES; i++) {
+        initialiserVoie(&(carrefour->voies[i]), i + 1);
+    }
+}
 
 // Fonction pour ajouter un véhicule à une voie du carrefour
 void ajouterVehicule(Carrefour* carrefour, Vehicule* vehicule, int voie){
@@ -81,4 +88,9 @@ void* comportementCarrefour(void* arg) {
     }
 
     pthread_exit(NULL);
+}
+
+void demanderItineraireAuServeur(ServeurControleur* serveur, Carrefour* carrefour, Vehicule* vehicule) {
+    // Appeler la fonction du serveur pour demander l'itinéraire
+    demanderItineraireAuServeur(&(carrefour->serveur), carrefour, vehicule);
 }

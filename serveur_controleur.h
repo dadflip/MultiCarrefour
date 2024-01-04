@@ -1,16 +1,15 @@
 #ifndef SERVEUR_CONTROLEUR_H
 #define SERVEUR_CONTROLEUR_H
 
-// Déclaration avancée de la structure Carrefour
-struct Carrefour;
+#include "carrefour.h"  // Incluez le fichier d'en-tête du carrefour
 
-// Structure pour représenter le serveur de contrôle
 typedef struct {
-    struct Carrefour* carrefours[4];  // Tableau des carrefours interconnectés
-    // Ajoutez d'autres informations spécifiques au serveur de contrôle ici
+    Carrefour carrefours[NOMBRE_CARREFOURS];
+    pthread_mutex_t mutex; // Mutex pour synchroniser l'accès au serveur
 } ServeurControleur;
 
 // Prototypes des fonctions liées au comportement du serveur de contrôle
 void initialiserServeurControleur(ServeurControleur* serveur);
+void demanderItineraireAuServeur(ServeurControleur* serveur, Carrefour* carrefour, Vehicule* vehicule);
 
 #endif  // SERVEUR_CONTROLEUR_H

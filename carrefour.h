@@ -4,34 +4,32 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-// Inclure le fichier d'en-tête des véhicules
 #include "vehicule.h"
-#include "serveur_controleur.h"
+#include "serveur_controleur.h"  // Incluez le fichier d'en-tête du serveur
 
 #define NOMBRE_VOIES 6
 #define NOMBRE_CARREFOURS 4
 
-// Structure pour représenter une voie
+// Déclaration avancée de la structure ServeurControleur
+struct ServeurControleur;
+
 typedef struct {
     int id;
-    pthread_mutex_t mutex;  // Mutex pour synchroniser l'accès à la file
+    pthread_mutex_t mutex;
     Vehicule* debut;
     Vehicule* fin;
 } Voie;
 
-// Structure pour représenter un carrefour
 typedef struct {
     int id;
     Voie voies[NOMBRE_VOIES];
-    ServeurControleur* serveur;
-    // Ajoutez d'autres informations spécifiques au carrefour ici
+    struct ServeurControleur* serveur;  // Notez que le serveur est une structure, pas un pointeur
 } Carrefour;
 
-// Prototypes des fonctions liées au comportement du carrefour
 void initialiserCarrefour(Carrefour* carrefour, int id, ServeurControleur* serveur);
 void* comportementCarrefour(void* arg);
 void ajouterVehicule(Carrefour* carrefour, Vehicule* vehicule, int voie);
 Vehicule* retirerVehicule(Carrefour* carrefour, int voie);
-void demanderItineraireAuServeur(ServeurControleur* serveur, Vehicule* vehicule);
+void demanderItineraireAuServeur(ServeurControleur* serveur, Carrefour* carrefour, Vehicule* vehicule);
 
 #endif  // CARREFOUR_H
