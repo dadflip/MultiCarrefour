@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo "Project Build and Run Script"
+
+# Ask user for confirmation
+read -p "Do you want to clean and build the project? (y/n): " choice
+if [ "$choice" != "y" ]; then
+    echo "Build canceled."
+    exit 0
+fi
+
+# Clean the project
+make clean
+
+# Build the project
+make
+
+# Check if build is successful
+if [ $? -eq 0 ]; then
+    # Ask user for confirmation to run the executable
+    read -p "Build successful. Do you want to run the executable? (y/n): " run_choice
+    if [ "$run_choice" == "y" ]; then
+        ./bin/project.launch
+    else
+        echo "You can manually run the executable using: ./bin/project.launch"
+    fi
+else
+    echo "Build failed. Please check for errors above."
+fi
